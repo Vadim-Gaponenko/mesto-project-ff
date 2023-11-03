@@ -17,12 +17,12 @@ function createCard(iteam, cardDelete) {
   titleCard.alt = iteam.name;
   return element;
 }
-function addCards() {
-  initialCards.forEach((iteam) => {
-    const cardItem = createCard(iteam, deleteCard);
-    placesList.append(cardItem);
-  });
-}
+
+initialCards.forEach((iteam) => {
+  const cardItem = createCard(iteam, deleteCard);
+  placesList.append(cardItem);
+});
+
 function deleteCard(event) {
   const card = event.target.closest(".places__item");
   card.remove();
@@ -31,4 +31,3 @@ function deleteCard(event) {
 // @todo: Функция удаления карточки
 
 // @todo: Вывести карточки на страницу
-addCards();
