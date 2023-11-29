@@ -1,6 +1,11 @@
 const cardTemplate = document.querySelector("#card-template");
 
-function createCard(iteam, deleteCardColbeck, likeCardColbeck) {
+function createCard(
+  iteam,
+  deleteCardColbeck,
+  likeCardColbeck,
+  openImegColbeck
+) {
   const cardTemplateContent = cardTemplate.content;
   const element = cardTemplateContent.cloneNode(true);
   const imgCard = element.querySelector(".card__image");
@@ -9,10 +14,12 @@ function createCard(iteam, deleteCardColbeck, likeCardColbeck) {
   const deleteButton = element.querySelector(".card__delete-button");
   deleteButton.addEventListener("click", deleteCardColbeck);
   likeButton.addEventListener("click", likeCardColbeck);
-
   imgCard.src = iteam.link;
   imgCard.alt = iteam.name;
   titleCard.textContent = iteam.name;
+  imgCard.addEventListener("click", () => {
+    openImegColbeck(imgCard);
+  });
   return element;
 }
 
