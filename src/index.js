@@ -2,7 +2,7 @@
 import { createCard, deleteCard, likeCard } from "./card.js";
 import "./pages/index.css";
 import { initialCards } from "./cards";
-import { addPopup, removePopup, closeByEscape, openImeg } from "./modal.js";
+import { openPopupHandle, closePopupHandler, openImeg } from "./modal.js";
 const editProfile = document.querySelector(".profile__edit-button");
 const profileAdd = document.querySelector(".profile__add-button");
 const popupTypeEdit = document.querySelector(".popup_type_edit");
@@ -17,6 +17,13 @@ const popupCardName = document.querySelector(".popup__input_type_card-name");
 const popupCaardUrl = document.querySelector(".popup__input_type_url");
 const addForm = document.forms["edit-profile"];
 const addPlace = document.forms["new-place"];
+// переменные для импорта в card.js
+const cardTemplate = document.querySelector("#card-template");
+// переменные для импорта в modal.js
+const popups = document.querySelectorAll(".popup");
+const popupCaption = document.querySelector(".popup__caption");
+const popupImage = document.querySelector(".popup__image");
+const popupTypeImage = document.querySelector(".popup_type_image");
 
 // @todo: DOM узлы
 const placesList = document.querySelector(".places__list");
@@ -32,7 +39,7 @@ function handleFormSubmit(evt) {
   const descriptionValue = inputDescription.value;
   profileTitle.textContent = nameValue;
   profileDescription.textContent = descriptionValue;
-  removePopup(popupTypeEdit);
+  closePopupHandler(popupTypeEdit);
   evt.target.reset();
 }
 
@@ -47,25 +54,23 @@ function handlePlaceSubmit(evt) {
   };
   const newCardAdd = createCard(newCard, deleteCard, likeCard, openImeg);
   placesList.prepend(newCardAdd);
-  removePopup(popupTypeCard);
+  closePopupHandler(popupTypeCard);
   evt.target.reset();
 }
 // Оброботчики
-
-document.addEventListener("keydown", closeByEscape);
 
 addForm.addEventListener("submit", handleFormSubmit);
 
 addPlace.addEventListener("submit", handlePlaceSubmit);
 
 profileAdd.addEventListener("click", () => {
-  addPopup(popupTypeCard);
+  openPopupHandle(popupTypeCard);
 });
 
 editProfile.addEventListener("click", () => {
   inputName.value = profileTitle.textContent;
   inputDescription.value = profileDescription.textContent;
-  addPopup(popupTypeEdit);
+  openPopupHandle(popupTypeEdit);
 });
 
 document.addEventListener("click", (event) => {
@@ -73,7 +78,7 @@ document.addEventListener("click", (event) => {
   const popup = event.target.closest(".popup");
 
   if (closeButton && popup) {
-    removePopup(popup);
+    closePopupHandler(popup);
   }
 });
 
@@ -82,10 +87,11 @@ document.addEventListener("click", (event) => {
   const popup = event.target.closest(".popup");
   const contentPopup = event.target.closest(".popup__content");
   if (closeButton || (popup && !contentPopup)) {
-    popup.classList.remove("popup_is-opened");
+    closePopupHandler(popup);
   }
 });
 
+export { popups, popupCaption, popupImage, popupTypeImage, cardTemplate };
 // @todo: Функция удаления карточки
 
 // @todo: Вывести карточки на страницу

@@ -1,4 +1,4 @@
-const cardTemplate = document.querySelector("#card-template");
+import { cardTemplate } from "./index.js";
 
 function createCard(
   iteam,
