@@ -1,16 +1,10 @@
 import { popups, popupCaption, popupImage, popupTypeImage } from "./index.js";
 
-function closePopup(evt) {
-  evt.forEach((popup) => {
-    popup.classList.remove("popup_is-opened");
-  });
-}
-
 function closeByEscape(event) {
   if (event.key === "Escape") {
     const popupOpen = document.querySelector(".popup_is-opened");
     if (popupOpen) {
-      closePopup(popups);
+      closePopupHandler(popups);
     }
   }
 }
@@ -22,8 +16,15 @@ function openImeg(iteam) {
 }
 
 function closePopupHandler(e) {
-  e.classList.remove("popup_is-opened");
-  document.removeEventListener("keydown", closeByEscape);
+  if (e === popups) {
+    e.forEach((popup) => {
+      popup.classList.remove("popup_is-opened");
+    });
+    document.removeEventListener("keydown", closeByEscape);
+  } else {
+    e.classList.remove("popup_is-opened");
+    document.removeEventListener("keydown", closeByEscape);
+  }
 }
 function openPopupHandle(e) {
   e.classList.add("popup_is-opened");
