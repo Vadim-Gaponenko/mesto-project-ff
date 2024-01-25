@@ -1,6 +1,3 @@
-// const token = "ecf74a5a-6c95-4add-8069-fa63833477fe";
-// const cohort = "wff-cohort-4";
-
 import { Promise } from "core-js";
 
 const token = "ecf74a5a-6c95-4add-8069-fa63833477fe";
