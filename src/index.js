@@ -51,7 +51,9 @@ export const validationConfig = {
   inputErrorClass: "popup__input_type_error",
   errorClass: "popup__error_visible",
 };
-
+function rendering(buttonSave, condition) {
+  buttonSave.textContent = condition;
+}
 Promise.all([getCards(), getUserData()])
   .then(([cards, userData]) => {
     userId = userData._id;
@@ -77,52 +79,61 @@ Promise.all([getCards(), getUserData()])
   });
 
 function handleFormSubmit(evt) {
+  rendering(evt.submitter, "Сохранение...");
   evt.preventDefault();
   editMyProfile(inputName.value, inputDescription.value)
     .then((res) => {
       profileTitle.textContent = res.name;
       profileDescription.textContent = res.about;
+      closePopupHandler(popupTypeEdit);
+      clearValidation(popupTypeEdit, validationConfig);
+      evt.target.reset();
     })
     .catch((error) => {
       console.log(error);
-    });
-
-  closePopupHandler(popupTypeEdit);
-  clearValidation(popupTypeEdit, validationConfig);
-  evt.target.reset();
+    })
+    .finally(() => rendering(evt.submitter, "Сохранить"));
 }
 
 function handlePlaceSubmit(evt) {
   evt.preventDefault();
-
+  rendering(evt.submitter, "Сохранение...");
   createCardNew({
     name: popupCardName.value,
     link: popupCaardUrl.value,
-  }).then((newCard) => {
-    const newCardAdd = createCard(
-      newCard,
-      deleteCardServer,
-      clickLike,
-      openImeg,
-      userId
-    );
-    placesList.prepend(newCardAdd);
-  });
-  closePopupHandler(popupTypeCard);
-  clearValidation(popupTypeCard, validationConfig);
-  evt.target.reset();
-}
-function handleAvatarSubmit() {
-  updateMyAvatar({ avatar: nameInputAvatar.value })
-    .then((data) => {
-      profileAvatar.style = `background-image: url(${data.avatar})`;
-      closePopup(popupTypeAvatar);
+  })
+    .then((newCard) => {
+      const newCardAdd = createCard(
+        newCard,
+        deleteCardServer,
+        clickLike,
+        openImeg,
+        userId
+      );
+      placesList.prepend(newCardAdd);
+      closePopupHandler(popupTypeCard);
+      clearValidation(popupTypeCard, validationConfig);
+      evt.target.reset();
     })
     .catch((error) => {
       console.log(error);
-    });
-  clearValidation(popupTypeAvatar, validationConfig);
-  evt.target.reset();
+    })
+    .finally(() => rendering(evt.submitter, "Создать"));
+}
+function handleAvatarSubmit(evt) {
+  rendering(evt.submitter, "Сохранение...");
+  evt.preventDefault();
+  updateMyAvatar({ avatar: nameInputAvatar.value })
+    .then((data) => {
+      profileAvatar.style = `background-image: url(${data.avatar})`;
+      closePopupHandler(popupTypeAvatar);
+      clearValidation(popupTypeAvatar, validationConfig);
+      evt.target.reset();
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+    .finally(() => rendering(evt.submitter, "Сохранить"));
 }
 enableValidation(validationConfig);
 // Оброботчики
