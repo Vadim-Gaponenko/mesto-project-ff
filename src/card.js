@@ -54,8 +54,9 @@ function createCard(
       deleteCard(event);
     })
   );
+
   likeButton.addEventListener("click", () =>
-    likeCardColbeck((item._id, checkLike(), changeLike))
+    likeCardColbeck(item._id, checkLike(), changeLike)
   );
   return element;
 }
@@ -79,11 +80,6 @@ function clickLike(id, isLiked, changeLike) {
       console.log(error);
     });
 }
-
-// function likeCard(evt) {
-//   const buttonLike = evt.target.closest(".card__like-button");
-//   buttonLike.classList.toggle("card__like-button_is-active");
-// }
 
 function deleteCard(event) {
   const card = event.target.closest(".places__item");

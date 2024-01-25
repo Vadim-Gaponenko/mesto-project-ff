@@ -19,7 +19,7 @@
   cursor: pointer;
 }
 
-.button_inactive {
+.popup__button_disabled {
   color: gainsboro;
   background-color: #fff;
   border: 1px solid gainsboro;
