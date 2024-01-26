@@ -1,6 +1,6 @@
 // @todo: Темплейт карточки
 import { createCard, deleteCardServer, clickLike } from "./card.js";
-import "./pages/index.css";
+import "../pages/index.css";
 import { initialCards } from "./cards";
 import { openPopup, closePopupHandler } from "./modal.js";
 import {
@@ -145,21 +145,30 @@ addForm.addEventListener("submit", handleFormSubmitProfile);
 addPlace.addEventListener("submit", handlePlaceSubmit);
 AddAvatar.addEventListener("submit", handleAvatarSubmit);
 
-profileAdd.addEventListener("click", () => {
-  clearValidation(popupTypeCard, validationConfig);
-  openPopup(popupTypeCard);
-});
-battonAvatar.addEventListener("click", () => {
-  clearValidation(popupTypeAvatar, validationConfig);
-  openPopup(popupTypeAvatar);
-});
-
-buttonEditProfile.addEventListener("click", () => {
+function openPopupProfile() {
   clearValidation(popupTypeEdit, validationConfig);
   inputName.value = profileTitle.textContent;
   inputDescription.value = profileDescription.textContent;
   openPopup(popupTypeEdit);
-});
+}
+
+function openPopupAddNewCard() {
+  clearValidation(popupTypeCard, validationConfig);
+  openPopup(popupTypeCard);
+  popupCardName.value = "";
+  popupCaardUrl.value = "";
+}
+
+function openPopupAvatar() {
+  openPopup(popupTypeAvatar);
+  clearValidation(popupTypeAvatar, validationConfig);
+  nameInputAvatar.value = "";
+}
+
+profileAdd.addEventListener("click", openPopupAddNewCard);
+battonAvatar.addEventListener("click", openPopupAvatar);
+
+buttonEditProfile.addEventListener("click", openPopupProfile);
 
 closeButton.forEach((el) => {
   el.addEventListener("click", (event) => {
