@@ -1,4 +1,4 @@
-import { cardTemplate } from "./index.js";
+import { cardTemplate } from "./constants.js";
 import { deleteMyCard, changeCardLike } from "./api.js";
 
 function createCard(

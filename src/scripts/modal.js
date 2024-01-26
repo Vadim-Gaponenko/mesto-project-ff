@@ -1,24 +1,26 @@
-import { popups, popupCaption, popupImage, popupTypeImage } from "./index.js";
+import { popupList } from "./constants.js";
 
 function closeByEscape(event) {
   if (event.key === "Escape") {
     const popupOpen = document.querySelector(".popup_is-opened");
     if (popupOpen) {
-      closePopupHandler(popups);
+      closePopupHandler(popupOpen);
     }
   }
-}
-function openImeg(iteam) {
-  popupImage.src = iteam.src;
-  popupImage.alt = iteam.alt;
-  popupCaption.textContent = iteam.alt;
-  openPopup(popupTypeImage);
 }
 
 function closePopupHandler(popup) {
   popup.classList.remove("popup_is-opened");
   document.removeEventListener("keydown", closeByEscape);
 }
+popupList.forEach((el) => {
+  el.addEventListener("click", (event) => {
+    if (event.target === event.currentTarget) {
+      closePopupHandler(event.target);
+    }
+  });
+});
+
 function openPopup(popup) {
   popup.classList.add("popup_is-opened");
   document.addEventListener("keydown", closeByEscape);

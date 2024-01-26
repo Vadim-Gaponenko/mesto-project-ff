@@ -10,6 +10,7 @@ import {
   createCardNew,
   updateMyAvatar,
 } from "./api.js";
+import { popupList } from "./constants.js";
 import { enableValidation, clearValidation } from "./validation.js";
 
 const buttonEditProfile = document.querySelector(".profile__edit-button");
@@ -31,16 +32,12 @@ const nameInputAvatar = document.querySelector(".popup__input_type_avatar");
 const addForm = document.forms["edit-profile"];
 const addPlace = document.forms["new-place"];
 const AddAvatar = document.forms["edit-avatar"];
-// переменные для импорта в card.js
-const cardTemplate = document.querySelector("#card-template");
-// переменные для импорта в modal.js
-const popups = document.querySelectorAll(".popup");
+
 const popupCaption = document.querySelector(".popup__caption");
 const popupImage = document.querySelector(".popup__image");
 const popupTypeImage = document.querySelector(".popup_type_image");
-const closeButton = document.querySelectorAll(".popup__close");
+const closeButtonList = document.querySelectorAll(".popup__close");
 let userId = "";
-//валидация переменные
 
 // @todo: DOM узлы
 const cardsContainer = document.querySelector(".places__list");
@@ -140,10 +137,16 @@ function handleAvatarSubmit(evt) {
 enableValidation(validationConfig);
 // Оброботчики
 
-addForm.addEventListener("submit", handleFormSubmitProfile);
+addForm.addEventListener("submit", (evt) => {
+  clearValidation(popupTypeCard, validationConfig);
+  handleFormSubmitProfile(evt);
+});
 
 addPlace.addEventListener("submit", handlePlaceSubmit);
-AddAvatar.addEventListener("submit", handleAvatarSubmit);
+AddAvatar.addEventListener("submit", (evt) => {
+  clearValidation(popupTypeAvatar, validationConfig);
+  handleAvatarSubmit(evt);
+});
 
 function openPopupProfile() {
   clearValidation(popupTypeEdit, validationConfig);
@@ -153,16 +156,11 @@ function openPopupProfile() {
 }
 
 function openPopupAddNewCard() {
-  clearValidation(popupTypeCard, validationConfig);
   openPopup(popupTypeCard);
-  popupCardName.value = "";
-  popupCaardUrl.value = "";
 }
 
 function openPopupAvatar() {
   openPopup(popupTypeAvatar);
-  clearValidation(popupTypeAvatar, validationConfig);
-  nameInputAvatar.value = "";
 }
 
 profileAdd.addEventListener("click", openPopupAddNewCard);
@@ -170,7 +168,7 @@ battonAvatar.addEventListener("click", openPopupAvatar);
 
 buttonEditProfile.addEventListener("click", openPopupProfile);
 
-closeButton.forEach((el) => {
+closeButtonList.forEach((el) => {
   el.addEventListener("click", (event) => {
     const popup = event.target.closest(".popup");
     if (popup) {
@@ -179,22 +177,13 @@ closeButton.forEach((el) => {
   });
 });
 
-popups.forEach((el) => {
-  el.addEventListener("click", (event) => {
-    const popup = event.target.closest(".popup");
-    const contentPopup = event.target.closest(".popup__content");
-    if (popup && !contentPopup) {
-      closePopupHandler(popup);
-    }
-  });
-});
 function openImagePopup(item) {
   popupImage.src = item.src;
   popupImage.alt = item.alt;
   popupCaption.textContent = item.alt;
   openPopup(popupTypeImage);
 }
-export { popups, popupCaption, popupImage, popupTypeImage, cardTemplate };
+
 // @todo: Функция удаления карточки
 
 // @todo: Вывести карточки на страницу
