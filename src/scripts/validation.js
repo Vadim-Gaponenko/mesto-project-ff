@@ -58,14 +58,14 @@ const hasInvalidInput = (inputList) => {
   });
 };
 
-const disabledButton = (buttonElement, validationConfig) => {
+const disableButton = (buttonElement, validationConfig) => {
   buttonElement.classList.add(validationConfig.inactiveButtonClass);
   buttonElement.disabled = true;
 };
 
 const toggleButtonState = (inputList, buttonElement, validationConfig) => {
   if (hasInvalidInput(inputList)) {
-    disabledButton(buttonElement, validationConfig);
+    disableButton(buttonElement, validationConfig);
   } else {
     buttonElement.classList.remove(validationConfig.inactiveButtonClass);
     buttonElement.disabled = false;
@@ -91,7 +91,7 @@ const clearValidation = (formElement, validationConfig) => {
   formList.forEach((inputElement, validationConfig) => {
     hideInputError(formElement, inputElement, validationConfig);
   });
-  disabledButton(buttonElement, validationConfig);
+  disableButton(buttonElement, validationConfig);
 };
 
 export { enableValidation, clearValidation };

@@ -51,7 +51,7 @@ const createCardNew = (data) => {
     body: JSON.stringify(data),
   }).then(getAnAnswer);
 };
-const clickLikeButton = (id, isLiked) => {
+const changeCardLike = (id, isLiked) => {
   return fetch(`${config.mainUrl}/cards/likes/${id}`, {
     method: isLiked ? "DELETE" : "PUT",
     headers: config.headers,
@@ -76,7 +76,7 @@ export {
   getUserData,
   editMyProfile,
   createCardNew,
-  clickLikeButton,
+  changeCardLike,
   deleteMyCard,
   updateMyAvatar,
 };

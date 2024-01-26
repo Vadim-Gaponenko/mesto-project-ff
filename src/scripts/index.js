@@ -2,7 +2,7 @@
 import { createCard, deleteCardServer, clickLike } from "./card.js";
 import "./pages/index.css";
 import { initialCards } from "./cards";
-import { openPopupHandle, closePopupHandler, openImeg } from "./modal.js";
+import { openPopup, closePopupHandler } from "./modal.js";
 import {
   getCards,
   getUserData,
@@ -12,7 +12,7 @@ import {
 } from "./api.js";
 import { enableValidation, clearValidation } from "./validation.js";
 
-const editProfile = document.querySelector(".profile__edit-button");
+const buttonEditProfile = document.querySelector(".profile__edit-button");
 const profileAdd = document.querySelector(".profile__add-button");
 const battonAvatar = document.querySelector(".avatar__button");
 const popupTypeEdit = document.querySelector(".popup_type_edit");
@@ -38,11 +38,12 @@ const popups = document.querySelectorAll(".popup");
 const popupCaption = document.querySelector(".popup__caption");
 const popupImage = document.querySelector(".popup__image");
 const popupTypeImage = document.querySelector(".popup_type_image");
+const closeButton = document.querySelectorAll(".popup__close");
 let userId = "";
 //валидация переменные
 
 // @todo: DOM узлы
-const placesList = document.querySelector(".places__list");
+const cardsContainer = document.querySelector(".places__list");
 export const validationConfig = {
   formSelector: ".popup__form",
   inputSelector: ".popup__input",
@@ -51,9 +52,10 @@ export const validationConfig = {
   inputErrorClass: "popup__input_type_error",
   errorClass: "popup__error_visible",
 };
-function rendering(buttonSave, condition) {
-  buttonSave.textContent = condition;
+function setButtonText(buttonSave, text) {
+  buttonSave.textContent = text;
 }
+
 Promise.all([getCards(), getUserData()])
   .then(([cards, userData]) => {
     userId = userData._id;
@@ -67,19 +69,19 @@ Promise.all([getCards(), getUserData()])
         item,
         deleteCardServer,
         clickLike,
-        openImeg,
+        openImagePopup,
         userId
       );
 
-      placesList.append(cardItem);
+      cardsContainer.append(cardItem);
     });
   })
   .catch((error) => {
     console.log(error);
   });
 
-function handleFormSubmit(evt) {
-  rendering(evt.submitter, "Сохранение...");
+function handleFormSubmitProfile(evt) {
+  setButtonText(evt.submitter, "Сохранение...");
   evt.preventDefault();
   editMyProfile(inputName.value, inputDescription.value)
     .then((res) => {
@@ -92,12 +94,12 @@ function handleFormSubmit(evt) {
     .catch((error) => {
       console.log(error);
     })
-    .finally(() => rendering(evt.submitter, "Сохранить"));
+    .finally(() => setButtonText(evt.submitter, "Сохранить"));
 }
 
 function handlePlaceSubmit(evt) {
   evt.preventDefault();
-  rendering(evt.submitter, "Сохранение...");
+  setButtonText(evt.submitter, "Сохранение...");
   createCardNew({
     name: popupCardName.value,
     link: popupCaardUrl.value,
@@ -107,10 +109,10 @@ function handlePlaceSubmit(evt) {
         newCard,
         deleteCardServer,
         clickLike,
-        openImeg,
+        openImagePopup,
         userId
       );
-      placesList.prepend(newCardAdd);
+      cardsContainer.prepend(newCardAdd);
       closePopupHandler(popupTypeCard);
       clearValidation(popupTypeCard, validationConfig);
       evt.target.reset();
@@ -118,10 +120,10 @@ function handlePlaceSubmit(evt) {
     .catch((error) => {
       console.log(error);
     })
-    .finally(() => rendering(evt.submitter, "Создать"));
+    .finally(() => setButtonText(evt.submitter, "Создать"));
 }
 function handleAvatarSubmit(evt) {
-  rendering(evt.submitter, "Сохранение...");
+  setButtonText(evt.submitter, "Сохранение...");
   evt.preventDefault();
   updateMyAvatar({ avatar: nameInputAvatar.value })
     .then((data) => {
@@ -133,47 +135,56 @@ function handleAvatarSubmit(evt) {
     .catch((error) => {
       console.log(error);
     })
-    .finally(() => rendering(evt.submitter, "Сохранить"));
+    .finally(() => setButtonText(evt.submitter, "Сохранить"));
 }
 enableValidation(validationConfig);
 // Оброботчики
-enableValidation(validationConfig);
-addForm.addEventListener("submit", handleFormSubmit);
+
+addForm.addEventListener("submit", handleFormSubmitProfile);
 
 addPlace.addEventListener("submit", handlePlaceSubmit);
 AddAvatar.addEventListener("submit", handleAvatarSubmit);
 
 profileAdd.addEventListener("click", () => {
-  openPopupHandle(popupTypeCard);
+  clearValidation(popupTypeCard, validationConfig);
+  openPopup(popupTypeCard);
 });
 battonAvatar.addEventListener("click", () => {
-  openPopupHandle(popupTypeAvatar);
+  clearValidation(popupTypeAvatar, validationConfig);
+  openPopup(popupTypeAvatar);
 });
 
-editProfile.addEventListener("click", () => {
+buttonEditProfile.addEventListener("click", () => {
+  clearValidation(popupTypeEdit, validationConfig);
   inputName.value = profileTitle.textContent;
   inputDescription.value = profileDescription.textContent;
-  openPopupHandle(popupTypeEdit);
+  openPopup(popupTypeEdit);
 });
 
-document.addEventListener("click", (event) => {
-  const closeButton = event.target.closest(".popup__close");
-  const popup = event.target.closest(".popup");
-
-  if (closeButton && popup) {
-    closePopupHandler(popup);
-  }
+closeButton.forEach((el) => {
+  el.addEventListener("click", (event) => {
+    const popup = event.target.closest(".popup");
+    if (popup) {
+      closePopupHandler(popup);
+    }
+  });
 });
 
-document.addEventListener("click", (event) => {
-  const closeButton = event.target.closest(".popup__close");
-  const popup = event.target.closest(".popup");
-  const contentPopup = event.target.closest(".popup__content");
-  if (closeButton || (popup && !contentPopup)) {
-    closePopupHandler(popup);
-  }
+popups.forEach((el) => {
+  el.addEventListener("click", (event) => {
+    const popup = event.target.closest(".popup");
+    const contentPopup = event.target.closest(".popup__content");
+    if (popup && !contentPopup) {
+      closePopupHandler(popup);
+    }
+  });
 });
-
+function openImagePopup(item) {
+  popupImage.src = item.src;
+  popupImage.alt = item.alt;
+  popupCaption.textContent = item.alt;
+  openPopup(popupTypeImage);
+}
 export { popups, popupCaption, popupImage, popupTypeImage, cardTemplate };
 // @todo: Функция удаления карточки
 

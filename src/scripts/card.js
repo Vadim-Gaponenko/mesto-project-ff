@@ -1,5 +1,5 @@
 import { cardTemplate } from "./index.js";
-import { deleteMyCard, clickLikeButton } from "./api.js";
+import { deleteMyCard, changeCardLike } from "./api.js";
 
 function createCard(
   item,
@@ -10,6 +10,8 @@ function createCard(
 ) {
   const cardTemplateContent = cardTemplate.content;
   const element = cardTemplateContent.cloneNode(true);
+  const card = element.querySelector(".card");
+
   const imgCard = element.querySelector(".card__image");
   const titleCard = element.querySelector(".card__title");
   const likeButton = element.querySelector(".card__like-button");
@@ -49,10 +51,8 @@ function createCard(
   };
   setLikeStatus();
 
-  deleteButton.addEventListener("click", (event) =>
-    deleteCardColbeck(item._id, () => {
-      deleteCard(event);
-    })
+  deleteButton.addEventListener("click", () =>
+    deleteCardColbeck(item._id, card)
   );
 
   likeButton.addEventListener("click", () =>
@@ -61,10 +61,10 @@ function createCard(
   return element;
 }
 
-function deleteCardServer(id, deleteCard) {
+function deleteCardServer(id, element) {
   deleteMyCard(id)
     .then(() => {
-      deleteCard();
+      deleteCard(element);
     })
     .catch((error) => {
       console.log(error);
@@ -72,7 +72,7 @@ function deleteCardServer(id, deleteCard) {
 }
 
 function clickLike(id, isLiked, changeLike) {
-  clickLikeButton(id, isLiked)
+  changeCardLike(id, isLiked)
     .then((data) => {
       changeLike(data.likes);
     })
@@ -81,9 +81,8 @@ function clickLike(id, isLiked, changeLike) {
     });
 }
 
-function deleteCard(event) {
-  const card = event.target.closest(".places__item");
-  card.remove();
+function deleteCard(element) {
+  element.remove();
 }
 
 export { createCard, clickLike, deleteCardServer };
