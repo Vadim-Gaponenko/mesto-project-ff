@@ -2,7 +2,11 @@
 import { createCard, deleteCardServer, clickLike } from "./card.js";
 import "../pages/index.css";
 import { initialCards } from "./cards";
-import { openPopup, closePopupHandler } from "./modal.js";
+import {
+  openPopup,
+  closePopupHandler,
+  handleCloseByOverlayClick,
+} from "./modal.js";
 import {
   getCards,
   getUserData,
@@ -10,7 +14,7 @@ import {
   createCardNew,
   updateMyAvatar,
 } from "./api.js";
-import { popupList } from "./constants.js";
+
 import { enableValidation, clearValidation } from "./validation.js";
 
 const buttonEditProfile = document.querySelector(".profile__edit-button");
@@ -32,7 +36,7 @@ const nameInputAvatar = document.querySelector(".popup__input_type_avatar");
 const addForm = document.forms["edit-profile"];
 const addPlace = document.forms["new-place"];
 const AddAvatar = document.forms["edit-avatar"];
-
+const popupList = document.querySelectorAll(".popup");
 const popupCaption = document.querySelector(".popup__caption");
 const popupImage = document.querySelector(".popup__image");
 const popupTypeImage = document.querySelector(".popup_type_image");
@@ -176,7 +180,9 @@ closeButtonList.forEach((el) => {
     }
   });
 });
-
+popupList.forEach((el) => {
+  el.addEventListener("click", handleCloseByOverlayClick);
+});
 function openImagePopup(item) {
   popupImage.src = item.src;
   popupImage.alt = item.alt;
